@@ -1,30 +1,39 @@
-from keras.src.layers import Conv2D, MaxPool2D, Flatten, Dense, Dropout
-from tensorflow.keras import Input
-from tensorflow.keras.models import Sequential
 
-def alexnet():
-    model = Sequential()
-    model.add(Input((224, 224, 3)))
-    model.add(Conv2D(filters=96, kernel_size=(11, 11), strides=(4, 4), padding="valid", activation='relu'))
-    model.add(MaxPool2D(pool_size=(3, 3), strides=(2, 2), padding="valid"))
-    model.add(Conv2D(filters=256, kernel_size=(5, 5), strides=(1, 1), padding='same', activation='relu'))
-    model.add(Conv2D(filters=384, kernel_size=(3, 3), strides=(1, 1), padding='same', activation='relu'))
-    model.add(Conv2D(filters=384, kernel_size=(3, 3), strides=(1, 1), padding='same', activation='relu'))
-    model.add(Conv2D(filters=256, kernel_size=(3, 3), strides=(1, 1), padding='same', activation='relu'))
-    model.add(MaxPool2D(pool_size=(3, 3), strides=(2, 2), padding="valid"))
-    model.add(Flatten())
-    model.add(Dense(units=4096, activation="relu"))
-    model.add(Dropout(0.5))
-    model.add(Dense(units=4096, activation="relu"))
-    model.add(Dropout(0.5))
-    model.add(Dense(units=4096, activation="relu"))
-    model.add(Dense(units=3, activation="softmax"))
+import cv2
+from definitions import BOARD_SIZE, GomokuPiece
+from pynput.mouse import Listener, Button
+from board import *
 
-    model.compile(
-        optimizer="Adam", loss="categorical_crossentropy", metrics=["accuracy"]
-    )
+capture = None
+initial_board = None
+model = None  # Load model here
 
-    return model
+
+def process_image():
+    ret, frame = capture.read()
+
+    cv2.imwrite('maybeBoard.jpeg', frame)
+    img, gray_blur = get_img_and_blur('maybeBoard.jpeg')
+    edges = canny_edges(gray_blur)
+    lines = hough_line(edges)
+    h_lines, v_lines = h_v_lines(lines)
+    intersection_points = line_intersections(h_lines, v_lines)
+
+
+def on_move(x, y, button, pressed):
+    if button == Button.left and pressed:
+        process_image()
+    if button == Button.middle and pressed:
+        return False
+
 
 def main():
-  pass
+    #  start video capturing
+    listener = Listener(on_click=on_move)
+    listener.start()
+
+
+if __name__ == '__main__':
+    capture = cv2.VideoCapture(1)
+    initial_board = [GomokuPiece.NP for _ in range(BOARD_SIZE + 1)]
+    main()
