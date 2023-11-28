@@ -11,3 +11,5 @@
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+datasets/gameplay/processed/*.npz
+datasets/gameplay/raw/*.psq
