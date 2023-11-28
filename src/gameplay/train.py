@@ -8,7 +8,8 @@ from tensorflow.keras import layers
 def create_cnn_model(input_shape):
     model = keras.Sequential([
         layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape),
-        layers.MaxPooling2D((2, 2)),
+        layers.Conv2D(64, (3, 3), activation='relu'),
+        layers.Conv2D(128, (3, 3), activation='relu'),
         layers.Flatten(),
         layers.Dense(128, activation='relu'),
         layers.Dense(400, activation='softmax')
@@ -35,7 +36,7 @@ outputs = np.array([data['output'].flatten() for data in dataset])
 model = create_cnn_model(input_shape)
 
 # Train the model
-model.fit(inputs, outputs, epochs=10, batch_size=32)
+model.fit(inputs, outputs, epochs=100, batch_size=20)
 
 test_input = np.zeros((20, 20))
 # test_input[3][3] = 1
