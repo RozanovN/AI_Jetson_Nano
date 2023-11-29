@@ -35,8 +35,10 @@ def on_click(event):
 
     # Make a prediction with the trained model
     if my_model:
-        # TODO: Make a prediction with my model
-        pass
+        output = model.predict(np.array([board]))
+        predicted_indices = np.argmax(output, axis=1)
+        row = predicted_indices // 20
+        col = predicted_indices % 20
     else:
         input = np.expand_dims(board, axis=(0, -1)).astype(np.float32)
         output = model.predict(input).squeeze()
