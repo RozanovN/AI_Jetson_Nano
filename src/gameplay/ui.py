@@ -4,7 +4,7 @@ from tensorflow.keras.models import load_model
 
 my_model = True
 if my_model:
-    model = load_model("test.h5")
+    model = load_model("test.keras")
 else:
     model = load_model("20201213_202430.h5")
 
@@ -16,6 +16,10 @@ def on_click(event):
 
     col = round((event.x - board_left) / cell_size)
     row = round((event.y - board_top) / cell_size)
+
+    # Do nothing if piece is already placed
+    if board[row][col] != 0:
+        return
 
     # Draw the piece
     if 0 <= col < board_size and 0 <= row < board_size:
@@ -32,15 +36,22 @@ def on_click(event):
 
     # Check if the game is over
     check_game_over(player=1)
+    
+    # Check if board is full
+    if check_board_full():
+        return
 
     # Make a prediction with the trained model
     if my_model:
         input = -board
         output = model.predict(np.array([input]))
-        predicted_indices = (np.argmax(output, axis=1))[0]
-        row = predicted_indices // 20
-        col = predicted_indices % 20
-        print("Predicted move: ", row, col)
+        while True:
+            predicted_index = np.argmax(output)
+            row = predicted_index // 20
+            col = predicted_index % 20
+            if board[row][col] == 0:
+                break
+            output[0][predicted_index] = 0
     else:
         input = np.expand_dims(board, axis=(0, -1)).astype(np.float32)
         output = model.predict(input).squeeze()
@@ -61,6 +72,25 @@ def on_click(event):
 
     # Check if the game is over
     check_game_over(player=-1)
+    
+    # Check if board is full
+    if check_board_full():
+        return
+
+def check_board_full():
+    global game_over
+    if np.count_nonzero(board) == board_size * board_size:
+        game_over = True
+        draw_message = "Draw!"
+        canvas.create_text(
+            canvas_width / 2,
+            board_bottom + y_offset / 2,
+            text=draw_message,
+            font=("Helvetica", cell_size),
+            fill="black",
+        )
+        return True
+    return False
 
 
 def check_game_over(player):
