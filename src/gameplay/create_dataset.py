@@ -11,6 +11,7 @@ size_of_board = 20
 initial_board_state = np.zeros((size_of_board, size_of_board), dtype=int)
 raw_data_file_extension = ".psq"
 file_count = 1000
+dataset = []
 
 # loop through all files in raw_data_dir_path
 for filename in os.listdir(raw_data_dir_path):
@@ -20,7 +21,6 @@ for filename in os.listdir(raw_data_dir_path):
         break
     file_count -= 1
     board_state = np.copy(initial_board_state)
-    dataset = []
     with open(os.path.join(raw_data_dir_path, filename), "r") as f:
         for line in f:
             if re.search(pattern, line):
@@ -44,4 +44,5 @@ for filename in os.listdir(raw_data_dir_path):
                         dataset.append({'input': rotated_input, 'output': rotated_output})
                 
                 board_state[move_row][move_col] = 1
-    np.savez(os.path.join(output_dir_path, filename.split(".")[0] + ".npz"), dataset=dataset)
+                
+np.savez(os.path.join(output_dir_path, "dataset.npz"), dataset=dataset)
