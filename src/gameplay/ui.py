@@ -2,7 +2,7 @@ import tkinter as tk
 import numpy as np
 from tensorflow.keras.models import load_model
 
-my_model = False
+my_model = True
 if my_model:
     model = load_model("test.h5")
 else:
@@ -35,10 +35,12 @@ def on_click(event):
 
     # Make a prediction with the trained model
     if my_model:
-        output = model.predict(np.array([board]))
-        predicted_indices = np.argmax(output, axis=1)
+        input = -board
+        output = model.predict(np.array([input]))
+        predicted_indices = (np.argmax(output, axis=1))[0]
         row = predicted_indices // 20
         col = predicted_indices % 20
+        print("Predicted move: ", row, col)
     else:
         input = np.expand_dims(board, axis=(0, -1)).astype(np.float32)
         output = model.predict(input).squeeze()
