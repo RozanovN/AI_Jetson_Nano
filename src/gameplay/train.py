@@ -36,7 +36,10 @@ outputs = np.array([data['output'].flatten() for data in dataset])
 model = create_cnn_model(input_shape)
 
 # Train the model
-model.fit(inputs, outputs, epochs=100, batch_size=20)
+model.fit(inputs, outputs, epochs=10, batch_size=20)
+
+# Save the model
+model.save("test.keras")
 
 test_input = np.zeros((20, 20))
 # test_input[3][3] = 1
