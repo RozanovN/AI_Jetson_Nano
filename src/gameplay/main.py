@@ -1,3 +1,4 @@
+import random
 import numpy as np
 from gomoku import Gomoku
 from tensorflow.keras.models import load_model
@@ -5,7 +6,7 @@ import tkinter as tk
 import time
 
 model1 = load_model("./models/my_model_pad.h5")
-model2 = load_model("./models/20201213_202430.h5")
+model2 = load_model("./models/my_model_pad_tanh.h5")
 board_size = 20
 players = {1: model1, -1: model2}
 
@@ -50,23 +51,25 @@ class GomokuBoardDisplay:
                 self.canvas.create_rectangle(x1, y1, x2, y2, fill=stone_color)
 
 def main():
-    gomoku = Gomoku(board_size)
-
     root = tk.Tk()
     root.title("Gomoku Board Display")
-
-    board_display = GomokuBoardDisplay(root, gomoku)
-
+    
+    gomoku = Gomoku(board_size)
     current_player = 1
+    first_move = True
+    
+    board_display = GomokuBoardDisplay(root, gomoku)
+    
     while not gomoku.game_over:
         if players[current_player] != "human":
-            move = get_model_move(players[current_player], gomoku.board * current_player, gomoku)
+            if first_move:
+                move = (random.randint(0, board_size-1), random.randint(0, board_size-1))
+                first_move = False
+            else:
+                move = get_model_move(players[current_player], gomoku.board * current_player, gomoku)
         else:
             move = get_human_move(gomoku)
         gomoku.next_state(move)
-        board_display.draw_board()
-        root.update()
-        time.sleep(0.5)
         if gomoku.check_win():
             print(gomoku.board)
             print("Player %d won!" % (1 if current_player == 1 else 2))
@@ -74,6 +77,10 @@ def main():
             print("Draw!")
         current_player = -current_player
         gomoku.change_player()
+        
+        board_display.draw_board()
+        root.update()
+        time.sleep(0.5)
 
     print("Game over!")
 
