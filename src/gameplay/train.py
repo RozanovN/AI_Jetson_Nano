@@ -40,5 +40,4 @@ model = create_cnn_model(input_shape)
 model.fit(inputs, outputs, epochs=10, batch_size=400)
 
 # Save the model
-model.save("my_model_tanh.keras")
 model.save("my_model_tanh.h5")

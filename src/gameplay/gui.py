@@ -4,7 +4,7 @@ from tensorflow.keras.models import load_model
 
 my_model = True
 if my_model:
-    model = load_model("my_model.keras")
+    model = load_model("./models/my_model_pad.h5")
 else:
     model = load_model("20201213_202430.h5")
 
