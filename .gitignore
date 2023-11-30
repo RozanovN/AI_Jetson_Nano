@@ -14,3 +14,4 @@
 datasets/gameplay/processed/*.npz
 datasets/gameplay/raw/*.psq
 *.pyc
+src/nano/models/*.h5

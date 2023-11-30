@@ -17,6 +17,8 @@ class Gomoku:
         if not self.check_valid_move(move):
             raise ValueError("Invalid move")
         self.board[move[0]][move[1]] = self.current_player
+        
+    def change_player(self):
         self.current_player = -self.current_player
     
     def check_valid_move(self, move):
