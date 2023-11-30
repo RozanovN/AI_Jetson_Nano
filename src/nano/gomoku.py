@@ -1,7 +1,7 @@
 import numpy as np
 
 
-size = 20
+board_size = 20
 
 def check_valid_move(board, move):
     row, col = move

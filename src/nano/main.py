@@ -5,7 +5,7 @@ import gomoku
 from tensorflow.keras.models import load_model
 
 model = load_model("./models/my_model_pad.h5")
-board_size = gomoku.size
+board_size = gomoku.board_size
 
 def get_model_move(board_state):
     output = model.predict(np.array([board_state]))
@@ -36,29 +36,27 @@ def announce(message):
     
 def main():
     result = None
+    board_state = None
+    player = 1
     while result is None:
-        print("Waiting for input...")
-        keyboard.wait('esc')
-        
-        board_state = get_board_state()
-        board_state = np.zeros((board_size, board_size))
-        result = gomoku.check_game_over(-1, board_state)
+        if player == 1:
+            print("Waiting for input...")
+            keyboard.wait('esc')
+            # board_state = get_board_state()
+            board_state = np.zeros((board_size, board_size))
+        else:
+            row, col = get_model_move(board_state)
+            announce(chr(ord('a') + row))
+            announce(str(col))
+            board_state[row][col] = 1
+        result = gomoku.check_game_over(player, board_state)
         if result == "win":
             announce("blackWin")
+            break
         elif result == "draw":
             announce("draw")
-        
-        row, col = get_model_move(board_state)
-        announce(chr(ord('a') + row))
-        announce(str(col))
-        
-        board_state[row][col] = 1
-        result = gomoku.check_game_over(1, board_state)
-        
-        if result == "win":
-            announce("whiteWin")
-        elif result == "draw":
-            announce("draw")
+            break
+        player *= -1
     print("Game over!")
 
 if __name__ == '__main__':
