@@ -1,14 +1,10 @@
-import random
-from pathlib import Path
-
-import cv2
-from definitions import BOARD_SIZE, GomokuPiece
-from pynput.mouse import Listener, Button
 from board import *
+from model import model
+from tensorflow.keras.models import load_model
 
 capture = None
-initial_board = None
-model = None  # Load model here
+model = model(True)
+model.load_weights('model_VGG16.h5')
 
 
 def process_image(image_path=Path(__file__) / "debug/temp/maybeBoard.jpeg"):
@@ -30,13 +26,13 @@ def process_image(image_path=Path(__file__) / "debug/temp/maybeBoard.jpeg"):
     # points = augment_points(points)
     x_list = write_crop_images_2(img, points, 0)
     img_filename_list = grab_cell_files()
-
+    print(classify_cells(model, img_filename_list))
 
 
 
 def test_detection():
     # process_image(Path(__file__).parent.parent.parent / f"datasets/go_imgs/go_board_{random.randint(1, 140)}.png")
-    process_image(Path('/Users/nickrozanov/PycharmProjects/AI_Jetson_Nano/datasets/go_imgs/img/go_board_8.png'))
+    process_image(Path('/Users/nickrozanov/PycharmProjects/AI_Jetson_Nano/datasets/go_imgs/img/go_board_8a.png'))
 
 
 if __name__ == '__main__':

@@ -1,5 +1,7 @@
 import glob
+import re
 from itertools import accumulate
+from locale import atoi
 from pathlib import Path
 
 from PIL import Image
@@ -148,7 +150,7 @@ def write_crop_images(img, points, img_count=0, folder_path=str(Path(__file__).p
                 start_y = 0
             cropped = img[start_y: end_y, start_x: end_x]
             try:
-                cv2.imwrite(folder_path + '/data_image' + str(img_count) + '.jpeg', cropped)
+                cv2.imwrite(folder_path + '/' + str(img_count) + '.jpeg', cropped)
                 img_count += 1
             except Exception as e:
                 print(e)
@@ -222,12 +224,26 @@ def prepare_image(image_path):
     return im
 
 
+def natural_keys(text):
+    return [atoi(c) for c in re.split('(\d+)', text) if c.isnumeric()]
+
+
 def classify_cells(model, img_filename_list):
-    category_reference = {}
+    #
+    category_reference = {0: -1, 1: 0, 2: 1}
     pred_list = []
+    img_filename_list.sort(key=natural_keys)
     for filename in img_filename_list:
         img = prepare_image(filename)
         out = model.predict(img)
         top_pred = np.argmax(out)
         pred = category_reference[top_pred]
         pred_list.append(pred)
+
+    board = []
+    for row in range(BOARD_LENGTH):
+        entry = []
+        for column in range(BOARD_LENGTH):
+            entry.append(pred_list[column + row * 19])
+        board.append(entry)
+    return board

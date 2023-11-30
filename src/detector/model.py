@@ -6,7 +6,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
-def model():
+def model(compiled=False):
     folder = Path(__file__).parent.parent.parent / "datasets/go_imgs/img/classification"
     image_size = (224, 224)
     batch_size = 32
@@ -42,16 +42,17 @@ def model():
     predictions = Dense(3, activation='softmax')(x)
 
     model = Model(inputs=model.input, outputs=predictions)
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
-    epochs = 10
-    history = model.fit(
-        train_gen,
-        epochs=epochs,
-        verbose=1,
-        validation_data=test_gen)
-    model.save_weights('model_VGG16.h5')
-    print(history.history)
+    if not compiled:
+        model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
+        epochs = 10
+        history = model.fit(
+            train_gen,
+            epochs=epochs,
+            verbose=1,
+            validation_data=test_gen)
+        model.save_model('model_VGG16.h5')
+        print(history.history)
     return model
 
 
-model()
+#  model()
