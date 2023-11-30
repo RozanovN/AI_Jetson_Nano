@@ -41,22 +41,22 @@ def announce(message):
 def main():
     result = None
     board_state = np.zeros((board_size, board_size))
-    player = 1
+    player = -1
     while result is None:
-        if player == 1:
+        if player == -1:
             print("Waiting for input...")
             keyboard.wait('esc')
             # board_state = get_board_state()
-            board_state[random.randint(0, board_size - 1)][random.randint(0, board_size - 1)] = -1
+            board_state[random.randint(0, board_size - 1)][random.randint(0, board_size - 1)] = player
         else:
             row, col = get_model_move(board_state)
             announce(chr(ord('a') + row))
             announce(str(col))
-            board_state[row][col] = 1
+            board_state[row][col] = player
         result = gomoku.check_game_over(player, board_state)
         if result == "win":
             print(board_state)
-            if player == 1:
+            if player == -1:
                 announce("blackWin")
             else:
                 announce("whiteWin")
