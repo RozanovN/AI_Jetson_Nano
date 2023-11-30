@@ -8,11 +8,11 @@ from tensorflow.python.client import device_lib
 # Define the CNN model
 def create_cnn_model(input_shape):
     model = keras.Sequential([
-        layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape),
-        layers.Conv2D(64, (3, 3), activation='relu'),
-        layers.Conv2D(128, (3, 3), activation='relu'),
+        layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape, padding='same'),
+        layers.Conv2D(64, (3, 3), activation='relu', padding='same'), 
+        layers.Conv2D(128, (3, 3), activation='relu', padding='same'), 
         layers.Flatten(),
-        layers.Dense(128, activation='relu'),
+        layers.Dense(128, activation='tanh'),
         layers.Dense(400, activation='softmax')
     ])
 
@@ -40,4 +40,5 @@ model = create_cnn_model(input_shape)
 model.fit(inputs, outputs, epochs=10, batch_size=400)
 
 # Save the model
-model.save("my_model.keras")
+model.save("my_model_tanh.keras")
+model.save("my_model_tanh.h5")
