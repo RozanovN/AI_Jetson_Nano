@@ -39,9 +39,13 @@ def main():
         else:
             move = get_human_move(gomoku)
         gomoku.next_state(move)
-        print(gomoku.board)
-        print("==================================================================")
+        if gomoku.check_win():
+            print("Player %d wins!" % 1 if current_player == 1 else 2)
+        elif gomoku.check_draw():
+            print("Draw!")
         current_player = -current_player
+        print(gomoku.board)
+        print("==================================================================")  
     print("Game over!")
 
 if __name__ == '__main__':
