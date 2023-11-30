@@ -1,91 +1,74 @@
 import numpy as np
 
 
-class Gomoku:
-    def __init__(self, size):
-        self.size = size
-        self.board = np.zeros((size, size))
-        self.current_player = 1
-        self.game_over = False
+size = 20
 
-    def reset(self):
-        self.board = np.zeros((self.size, self.size))
-        self.current_player = 1
-        self.game_over = False
-
-    def next_state(self, move):
-        if not self.check_valid_move(move):
-            raise ValueError("Invalid move")
-        self.board[move[0]][move[1]] = self.current_player
-        
-    def change_player(self):
-        self.current_player = -self.current_player
-    
-    def check_valid_move(self, move):
-        row = move[0]
-        col = move[1]
-        if row < 0 or row >= self.size or col < 0 or col >= self.size:
-            return False
-        if self.board[row][col] != 0:
-            return False
+def check_valid_move(board, move):
+    row, col = move
+    if row < 0 or row >= board_size or col < 0 or col >= board_size:
+        return False
+    if board[row][col] == 0:
         return True
-    
-    def check_draw(self):
-        if np.count_nonzero(self.board) == self.size * self.size:
-            self.game_over = True
-            return True
-        return False
+    return False
 
-    def check_win(self):
-        for row in range(self.size):
-            for col in range(self.size):
-                try:
-                    if (
-                        self.board[row][col] == self.current_player
-                        and self.board[row + 1][col] == self.current_player
-                        and self.board[row + 2][col] == self.current_player
-                        and self.board[row + 3][col] == self.current_player
-                        and self.board[row + 4][col] == self.current_player
-                    ):
-                        self.game_over = True
-                        return True
-                except:
-                    pass
-                try:
-                    if (
-                        self.board[row][col] == self.current_player
-                        and self.board[row][col + 1] == self.current_player
-                        and self.board[row][col + 2] == self.current_player
-                        and self.board[row][col + 3] == self.current_player
-                        and self.board[row][col + 4] == self.current_player
-                    ):
-                        self.game_over = True
-                        return True
-                except:
-                    pass
-                try:
-                    if (
-                        self.board[row][col] == self.current_player
-                        and self.board[row + 1][col + 1] == self.current_player
-                        and self.board[row + 2][col + 2] == self.current_player
-                        and self.board[row + 3][col + 3] == self.current_player
-                        and self.board[row + 4][col + 4] == self.current_player
-                    ):
-                        self.game_over = True
-                        return True
-                except:
-                    pass
-                try:
-                    if (
-                        col >= 4
-                        and self.board[row][col] == self.current_player
-                        and self.board[row + 1][col - 1] == self.current_player
-                        and self.board[row + 2][col - 2] == self.current_player
-                        and self.board[row + 3][col - 3] == self.current_player
-                        and self.board[row + 4][col - 4] == self.current_player
-                    ):
-                        self.game_over = True
-                        return True
-                except:
-                    pass
-        return False
+def check_game_over(player, board):
+    if check_win(player, board):
+        return "win"
+    elif check_board_full(board):
+        return "draw"
+    return None
+
+def check_board_full(board):
+    if np.count_nonzero(board) == board_size * board_size:
+        return True
+    return False
+
+def check_win(player, board):
+    for row in range(board_size):
+        for col in range(board_size):
+            try:
+                if (
+                    board[row][col] == player
+                    and board[row + 1][col] == player
+                    and board[row + 2][col] == player
+                    and board[row + 3][col] == player
+                    and board[row + 4][col] == player
+                ):
+                    return True
+            except:
+                pass
+            try:
+                if (
+                    board[row][col] == player
+                    and board[row][col + 1] == player
+                    and board[row][col + 2] == player
+                    and board[row][col + 3] == player
+                    and board[row][col + 4] == player
+                ):
+                    return True
+            except:
+                pass
+            try:
+                if (
+                    board[row][col] == player
+                    and board[row + 1][col + 1] == player
+                    and board[row + 2][col + 2] == player
+                    and board[row + 3][col + 3] == player
+                    and board[row + 4][col + 4] == player
+                ):
+                    return True
+            except:
+                pass
+            try:
+                if (
+                    col >= 4
+                    and board[row][col] == player
+                    and board[row + 1][col - 1] == player
+                    and board[row + 2][col - 2] == player
+                    and board[row + 3][col - 3] == player
+                    and board[row + 4][col - 4] == player
+                ):
+                    return True
+            except:
+                pass
+    return False

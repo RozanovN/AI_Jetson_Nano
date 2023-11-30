@@ -1,16 +1,16 @@
+import pygame
+import keyboard
 import numpy as np
-from gomoku import Gomoku
+import gomoku
 from tensorflow.keras.models import load_model
 
-model1 = load_model("./models/my_model_pad.h5")
-model2 = load_model("./models/20201213_202430.h5")
-board_size = 20
-players = {1: model1, -1: model2}
+model = load_model("./models/my_model_pad.h5")
+board_size = gomoku.size
 
-def get_model_move(model, board_state, board):
+def get_model_move(board_state):
     output = model.predict(np.array([board_state]))
     move = None
-    while move is None or not board.check_valid_move(move):
+    while move is None or not gomoku.check_valid_move(board_state, move):
         if move is not None:
             print(f"Invalid move {move}. Getting next move...")
         predicted_index = np.argmax(output)
@@ -20,32 +20,45 @@ def get_model_move(model, board_state, board):
         move = (row, col)
     return move
 
-def get_human_move(board):
-    move = None
-    while move is None or not board.check_valid_move(move):
-        if move is not None:
-            print(f"Invalid move {move}. Try again...")
-        row = int(input(f"Enter row (0-{board_size-1}): "))
-        col = int(input(f"Enter col (0-{board_size-1}): "))
-        move = (row, col)
-    return move
+def get_board_state():
+    state = None
+    # TODO: Image recognition, get board state with camera
+    return state
 
+def announce(message):
+    file_path = "./sound/" + message + ".mp3"
+    pygame.mixer.init()
+    pygame.mixer.music.load(file_path)
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
+    pygame.mixer.quit()
+    
 def main():
-    gomoku = Gomoku(board_size)
-    current_player = 1
-    while not gomoku.game_over:
-        if players[current_player] != "human":
-            move = get_model_move(players[current_player], gomoku.board * current_player, gomoku)
-        else:
-            move = get_human_move(gomoku)
-        gomoku.next_state(move)
-        if gomoku.check_win():
-            print(gomoku.board)
-            print("Player %d won!" % (1 if current_player == 1 else 2))
-        elif gomoku.check_draw():
-            print("Draw!")
-        current_player = -current_player
-        gomoku.change_player()
+    result = None
+    while result is None:
+        print("Waiting for input...")
+        keyboard.wait('esc')
+        
+        board_state = get_board_state()
+        board_state = np.zeros((board_size, board_size))
+        result = gomoku.check_game_over(-1, board_state)
+        if result == "win":
+            announce("blackWin")
+        elif result == "draw":
+            announce("draw")
+        
+        row, col = get_model_move(board_state)
+        announce(chr(ord('a') + row))
+        announce(str(col))
+        
+        board_state[row][col] = 1
+        result = gomoku.check_game_over(1, board_state)
+        
+        if result == "win":
+            announce("whiteWin")
+        elif result == "draw":
+            announce("draw")
     print("Game over!")
 
 if __name__ == '__main__':
