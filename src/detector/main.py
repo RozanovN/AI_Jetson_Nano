@@ -31,8 +31,9 @@ def process_image(image_path=Path(__file__) / "debug/temp/maybeBoard.jpeg"):
 
 
 def test_detection():
-    # process_image(Path(__file__).parent.parent.parent / f"datasets/go_imgs/go_board_{random.randint(1, 140)}.png")
-    process_image(Path('/Users/nickrozanov/PycharmProjects/AI_Jetson_Nano/datasets/go_imgs/img/go_board_8a.png'))
+    path = Path(__file__).parent.parent.parent / f"datasets/go_imgs/img/go_board_8a.png"
+    print(path)
+    process_image(path)
 
 
 if __name__ == '__main__':
