@@ -1,6 +1,5 @@
 from board import *
 from model import model
-from tensorflow.keras.models import load_model
 
 capture = None
 model = model(True)

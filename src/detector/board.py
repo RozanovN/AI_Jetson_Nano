@@ -1,18 +1,18 @@
 import glob
 import re
+from collections import defaultdict
 from itertools import accumulate
 from locale import atoi
 from pathlib import Path
 
-from PIL import Image
 import cv2
 import math
 import numpy as np
-import scipy.spatial as spatial
 import scipy.cluster as cluster
-from collections import defaultdict
+import scipy.spatial as spatial
+from PIL import Image
 
-from src.detector.definitions import BOARD_LENGTH, GomokuPiece
+from src.detector.definitions import BOARD_LENGTH
 
 
 def get_img_and_blur(path):
