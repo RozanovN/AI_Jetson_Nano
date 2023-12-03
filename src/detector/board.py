@@ -12,7 +12,7 @@ import scipy.cluster as cluster
 import scipy.spatial as spatial
 from PIL import Image
 
-from src.detector.definitions import BOARD_LENGTH
+from definitions import BOARD_LENGTH
 
 
 def get_img_and_blur(path):
@@ -161,7 +161,7 @@ def write_crop_images_2(img, points, img_count=0, folder_path=str(Path(__file__)
     length = float('inf')  # Initialize with a large value
 
     for i in range(len(points) - 1):
-        distance = math.dist(points[i], points[i + 1])
+        distance = np.linalg.norm(np.asarray(points[i]) - np.asarray(points[i + 1]))
         if length > distance:
             length = distance
 
