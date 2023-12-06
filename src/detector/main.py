@@ -3,7 +3,7 @@ from model import model
 
 capture = None
 model = model(True)
-model.load_weights('model_VGG16.h5')
+model.load_weights(str(Path(__file__).parent / 'model_VGG16.h5'))
 
 
 def process_image(image_path=Path(__file__) / "debug/temp/maybeBoard.jpeg"):
