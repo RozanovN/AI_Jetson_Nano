@@ -57,4 +57,5 @@ def model(compiled=False):
     return model
 
 
-model()
+if __name__ == '__main__':
+    model()
