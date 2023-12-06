@@ -8,7 +8,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 def model(compiled=False):
     if not compiled:
-        image_size = (224, 224)
+        image_size = (32, 32)
         batch_size = 32
         folder = Path(__file__).parent.parent.parent / "datasets/go_imgs/img/classification"
         datagen = ImageDataGenerator(
@@ -32,7 +32,7 @@ def model(compiled=False):
             color_mode='rgb',
             shuffle=False)
 
-    model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+    model = VGG16(weights='imagenet', include_top=False, input_shape=(32, 32, 3))
     if not compiled:
         model.summary()
     for layer in model.layers:

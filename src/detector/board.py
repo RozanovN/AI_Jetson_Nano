@@ -205,7 +205,7 @@ def debug_put_points_on_image(points, img, folder_path=str(Path(__file__).parent
     cv2.imwrite(folder_path + '/result.jpg', img)
 
 
-def convert_image_to_bgr_numpy_array(image_path, size=(224, 224)):
+def convert_image_to_bgr_numpy_array(image_path, size=(32, 32)):
     image = Image.open(image_path).resize(size)
     img_data = np.array(image.getdata(), np.float32).reshape(*size, -1)
     # swap R and B channels
