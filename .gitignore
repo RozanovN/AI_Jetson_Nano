@@ -14,3 +14,4 @@
 datasets/gameplay/raw/*.psq
 datasets/gameplay/processed/*
 src/nano/__pycache__/gomoku.cpython-311.pyc
+src/detector/__pycache__/*
