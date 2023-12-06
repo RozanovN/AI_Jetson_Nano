@@ -52,9 +52,9 @@ def model(compiled=False):
             epochs=epochs,
             verbose=1,
             validation_data=test_gen)
-        model.save_model('model_VGG16.h5')
+        model.save_weights('model_VGG16.h5')
         print(history.history)
     return model
 
 
-#  model()
+model()
