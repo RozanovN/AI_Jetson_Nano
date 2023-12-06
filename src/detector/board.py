@@ -15,9 +15,8 @@ from PIL import Image
 from definitions import BOARD_LENGTH
 
 
-def get_img_and_blur(path):
-    img = cv2.imread(str(path))
-    img = cv2.resize(img, (483, 483))
+def get_img_and_blur(init_image):
+    img = cv2.resize(init_image, (483, 483))
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray_blur = gray #  cv2.blur(gray, (1, 1))
     return img, gray_blur
@@ -305,14 +304,4 @@ def perspective_transformation(img, gray):
     matrix = cv2.getPerspectiveTransform(input_points, converted_points)
     img_output = cv2.warpPerspective(img_original, matrix, (max_width, max_height))
 
-    # Image shape modification for hstack
-    gray = np.stack((gray,) * 3, axis=-1)
-    edged = np.stack((edged,) * 3, axis=-1)
-
-    img_hor = np.hstack((img_original, gray, edged, img))
-    cv2.imshow("Contour detection", img_hor)
-    cv2.imshow("Warped perspective", img_output)
-
-    # cv2.imwrite('output/document.jpg', img_output)
-
-    cv2.waitKey(0)
+    return img_output
