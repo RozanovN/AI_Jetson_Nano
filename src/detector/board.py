@@ -62,7 +62,7 @@ def unique_lines(lines, delta=15):
         return np.unique(np.array(l), axis=0)
 
 
-def debug_put_lines_on_image(lines, img, folder_path=str(Path(__file__).parent / 'debug/lines/')):
+def debug_put_lines_on_image(lines, img, folder_path='./debug/lines/'):
     for line in lines:
         rho, theta = line
         a = np.cos(theta)
@@ -156,7 +156,7 @@ def write_crop_images(img, points, img_count=0, folder_path=str(Path(__file__).p
     return img_count
 
 
-def write_crop_images_2(img, points, img_count=0, folder_path=str(Path(__file__).parent / 'debug/raw_data/')):
+def write_crop_images_2(img, points, img_count=0, folder_path='./debug/raw_data/'):
     length = float('inf')  # Initialize with a large value
 
     for i in range(len(points) - 1):
@@ -189,7 +189,7 @@ def write_crop_images_2(img, points, img_count=0, folder_path=str(Path(__file__)
     return img_count
 
 
-def grab_cell_files(folder_path=str(Path(__file__).parent / 'debug/raw_data/*')):
+def grab_cell_files(folder_path='./debug/raw_data/*'):
     img_filename_list = []
     for path_name in glob.glob(folder_path):
         img_filename_list.append(path_name)
@@ -244,7 +244,9 @@ def classify_cells(model, img_filename_list):
         entry = []
         for column in range(BOARD_LENGTH):
             entry.append(pred_list[column + row * 19])
+        entry.append(0) # padding zero
         board.append(entry)
+    board.append([0 for x in range(20)])
     return board
 
 
