@@ -4,7 +4,7 @@ import json
 
 model = model(True)
 model.load_weights(str(Path(__file__).parent / 'model_VGG16.h5'))
-debug = False
+debug = True
 
 
 def process_image(image_path):
@@ -37,11 +37,11 @@ def process_image(image_path):
         for x in classified:
             print(x)
     with open("./classified.json", 'w', encoding='utf-8') as f:
-        json.dump({classified}, f)
+        json.dump({"board": classified}, f)
 
 
 def test_detection():
-    path = Path(__file__).parent.parent.parent / f"datasets/go_imgs/img/realimage19.jpg"
+    path = Path(__file__).parent.parent.parent / f"datasets/go_imgs/img/realimage12.jpg"
     print(path)
     process_image(path)
 
