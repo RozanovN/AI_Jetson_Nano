@@ -37,7 +37,7 @@ def process_image(image_path):
         for x in classified:
             print(x)
     with open("classified.json", 'w', encoding='utf-8') as f:
-        json.dumps({classified}, f)
+        json.dump({classified}, f)
 
 
 def test_detection():
