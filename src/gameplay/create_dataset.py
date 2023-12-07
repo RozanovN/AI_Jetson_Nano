@@ -5,13 +5,14 @@ import pandas as pd
 
 
 raw_data_dir_path = os.path.join(os.path.dirname(__file__), "..", "..", "datasets", "gameplay", "raw")
-output_dir_path = os.path.join(os.path.dirname(__file__), "..", "..", "datasets", "gameplay", "processed")
 pattern =  re.compile(r'\b\d+,\d+,\d+\b')
 size_of_board = 20
 initial_board_state = np.zeros((size_of_board, size_of_board), dtype=int)
 raw_data_file_extension = ".psq"
-file_count = 1000
+file_count = 5000
+output_path = os.path.join(os.path.dirname(__file__), "..", "..", "datasets", "gameplay", "processed", f"dataset_{file_count}_up30_2moves.npz")
 dataset = []
+upsample_factor = 30
 
 # loop through all files in raw_data_dir_path
 for filename in os.listdir(raw_data_dir_path):
@@ -45,4 +46,9 @@ for filename in os.listdir(raw_data_dir_path):
                 
                 board_state[move_row][move_col] = 1
                 
-np.savez(os.path.join(output_dir_path, "dataset.npz"), dataset=dataset)
+    last_three_moves = dataset[-24:]
+    dataset = dataset[:-24]
+    winning_moves = last_three_moves[:8] + last_three_moves[-8:]
+    dataset.extend(winning_moves * upsample_factor)
+                
+np.savez(output_path, dataset=dataset)

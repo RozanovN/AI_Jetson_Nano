@@ -1,3 +1,4 @@
+import os
 import random
 import numpy as np
 from gomoku import Gomoku
@@ -5,8 +6,9 @@ from tensorflow.keras.models import load_model
 import tkinter as tk
 import time
 
-model1 = load_model("./models/my_model_pad.h5")
-model2 = load_model("./models/my_model_pad_tanh.h5")
+model_dir = os.path.join(os.path.dirname(__file__), "models")
+model1 = load_model(os.path.join(model_dir, "20201213_202430.h5"))
+model2 = load_model(os.path.join(model_dir, "my_model_sigmoid_binary_3000_up10.h5"))
 board_size = 20
 players = {1: model1, -1: model2}
 

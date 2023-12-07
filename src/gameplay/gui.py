@@ -1,12 +1,14 @@
+import os
 import tkinter as tk
 import numpy as np
 from tensorflow.keras.models import load_model
 
 my_model = True
+model_dir = os.path.join(os.path.dirname(__file__), "models")
 if my_model:
-    model = load_model("./models/my_model_pad.h5")
+    model = load_model(os.path.join(model_dir, "my_model_sigmoid_binary_3000_up10_2moves.h5"), compile=False)
 else:
-    model = load_model("20201213_202430.h5")
+    model = load_model(os.path.join(model_dir, "20201213_202430.h5"))
 
 
 def on_click(event):
@@ -44,7 +46,8 @@ def on_click(event):
     # Make a prediction with the trained model
     if my_model:
         input = -board
-        output = model.predict(np.array([input]))
+        input = input.reshape((1, board_size, board_size, 1))
+        output = model.predict(input)
         while True:
             predicted_index = np.argmax(output)
             row = predicted_index // 20

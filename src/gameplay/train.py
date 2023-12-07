@@ -8,12 +8,12 @@ from tensorflow.python.client import device_lib
 # Define the CNN model
 def create_cnn_model(input_shape):
     model = keras.Sequential([
-        layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape, padding='same'),
-        layers.Conv2D(64, (3, 3), activation='relu', padding='same'), 
-        layers.Conv2D(128, (3, 3), activation='relu', padding='same'), 
+        layers.Conv2D(32, 3, activation='relu', input_shape=input_shape, padding='same'),
+        layers.Conv2D(64, 3, activation='relu', padding='same'), 
+        layers.Conv2D(128, 3, activation='relu', padding='same'), 
         layers.Flatten(),
-        layers.Dense(128, activation='tanh'),
-        layers.Dense(400, activation='softmax')
+        layers.Dense(128, activation='relu'),
+        layers.Dense(361, activation='softmax')
     ])
 
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
@@ -24,7 +24,7 @@ input_shape = (20, 20, 1)
 
 # Load the dataset from the .npz file
 dataset_dir_path = os.path.join(os.path.dirname(__file__), "..", "..", "datasets", "gameplay", "processed")
-dataset_path = os.path.join(dataset_dir_path, "dataset.npz")
+dataset_path = os.path.join(dataset_dir_path, "dataset_5000_up30_2moves.npz")
 
 loaded_data = np.load(dataset_path, allow_pickle=True)
 dataset = loaded_data['dataset']
@@ -40,4 +40,4 @@ model = create_cnn_model(input_shape)
 model.fit(inputs, outputs, epochs=10, batch_size=400)
 
 # Save the model
-model.save("my_model_tanh.h5")
+model.save(os.path.join(os.path.dirname(__file__),"my_model_sigmoid_binary_5000_up30_2moves.h5"))
