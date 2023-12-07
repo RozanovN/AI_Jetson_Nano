@@ -1,4 +1,6 @@
-numpy
-tensorflow
-opencv-python
-pynput
+numpy~=1.26.1
+tensorflow~=2.14.0
+opencv-python~=4.8.1.78
+pynput~=1.7.6
+scipy~=1.11.3
+Pillow~=10.1.0

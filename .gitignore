@@ -11,7 +11,12 @@
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+cnn_gameplay_jimmy
 datasets/gameplay/processed/*.npz
 datasets/gameplay/raw/*.psq
 *.pyc
 src/nano/models/*.h5
+datasets/gameplay/raw/*.psq
+datasets/gameplay/processed/*
+src/nano/__pycache__/gomoku.cpython-311.pyc
+src/detector/__pycache__/*
